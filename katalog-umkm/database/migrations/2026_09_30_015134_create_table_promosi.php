@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('table_promosi', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_produk')->constrained('table_produk')->onDelete('cascade');
+            $table->string('judul');
+            $table->string('path_banner')->nullable();
+            $table->float('persen_diskon');
+            $table->dateTime('tanggal_mulai');
+            $table->dateTime('tanggal_selesai');
             $table->timestamps();
         });
     }

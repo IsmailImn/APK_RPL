@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('table_gambar_produk', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_produk')->constrained('table_produk')->onDelete('cascade');
+            $table->string('path_gambar')->nullable();
+            $table->integer('urutan');
             $table->timestamps();
         });
     }
