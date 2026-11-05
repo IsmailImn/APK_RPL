@@ -45,4 +45,6 @@ Route::middleware('auth:sanctum')->group(function() {
 Route::middleware(['auth:sanctum','admin'])->prefix('admin')->group(function() {
     Route::post('/register-staff', [AuthController::class, 'registerAdmin']);
     Route::post('/produk', [AdminProdukController::class, 'store']);
+    Route::put('/produk/{id}/', [AdminProdukController::class, 'update']);
+    Route::delete('/produk/{id}/', [AdminProdukController::class, 'destroy']);
 });
