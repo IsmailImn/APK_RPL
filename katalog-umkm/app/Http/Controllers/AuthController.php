@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Pengguna;
 use Dotenv\Validator;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use JsonException;
 
 class AuthController extends Controller
 {
@@ -83,5 +85,73 @@ class AuthController extends Controller
             'status'=>'success',
             'message'=>'Berhasil logutt'
         ]);
+    }
+
+    public function registerAdminPublik(Request $request): JsonResponse
+    {
+        $request->validate([
+            'nama'=>'required|string|max:255',
+            'email'=>'required|string|max:255|unique:table_pengguna,email',
+            'no_wa'=>'required|string|max:15',
+            'password'=>'required|string|min:6',
+            'secret_key'=>'required|string'
+        ]);
+
+        $systemSecret = env('ADMIN_REGISTRATION_SECRET');
+
+        if ($request->secret_key != $systemSecret){
+            return response()->json([
+                'success'=>false,
+                'message'=>'Registrasi ditolak, Secret key yang Anda masukkan salah'
+            ], 403);
+        }
+
+        $adminBaru = Pengguna::create([
+            'nama'=>$request->nama,
+            'email'=>$request->email,
+            'no_wa'=>$request->no_wa,
+            'password_hash'=>Hash::make($request->password),
+            'peran'=>'admin'
+        ]);
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'Registrasi akun admin berhasil dilakukan',
+            'data'=> [
+                'id'=>$adminBaru->id,
+                'nama'=>$adminBaru->nama,
+                'email'=>$adminBaru->email,
+                'peran'=>$adminBaru->peran
+            ]
+        ], 201);
+    }
+
+    public function registerAdmin(Request $request): JsonResponse
+    {
+        $request->validate([
+            'nama'=>'required|string|max:255',
+            'email'=>'required|string|max:255|unique:table_pengguna,email',
+            'no_wa'=>'required|string|max:15',
+            'password'=>'required|string|min:6'
+        ]);
+
+        $adminBaru = Pengguna::create([
+            'nama'=>$request->nama,
+            'email'=>$request->email,
+            'no_wa'=>$request->no_wa,
+            'password_hash'=>Hash::make($request->password),
+            'peran'=>'admin'
+        ]);
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'Registrasi akun admin berhasil dilakukan',
+            'data'=> [
+                'id'=>$adminBaru->id,
+                'nama'=>$adminBaru->nama,
+                'email'=>$adminBaru->email,
+                'peran'=>$adminBaru->peran
+            ]
+        ], 201);
     }
 }
