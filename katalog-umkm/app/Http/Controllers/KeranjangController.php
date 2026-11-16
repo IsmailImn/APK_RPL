@@ -147,4 +147,5 @@ class KeranjangController extends Controller
             'message'=>'Berhasil Hapus Item Keranjang'
         ], 200);
     }
+    #ping test
 }
