@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AdminPesananController;
 use App\Http\Controllers\Api\AdminProdukController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KeranjangController;
@@ -47,4 +48,6 @@ Route::middleware(['auth:sanctum','admin'])->prefix('admin')->group(function() {
     Route::post('/produk', [AdminProdukController::class, 'store']);
     Route::put('/produk/{id}/', [AdminProdukController::class, 'update']);
     Route::delete('/produk/{id}/', [AdminProdukController::class, 'destroy']);
+    Route::get('/pesanan', [AdminPesananController::class, 'index']);
+    Route::post('/pesanan/{id}/status', [AdminPesananController::class, 'updateStatus']);
 });
